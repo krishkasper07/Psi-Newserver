@@ -4,24 +4,28 @@ const axios = require("axios");
 
 const Order = require("../models/orders.model");
 
-const getProductDetails = (product) => {
+const prefix=process.env.PREFIX;
+
+const openClose=process.env.CLOSEANDOPEN
+
+const getProductDetails = async(product) => {
   let arr = [];
 
-  product.forEach((el) => {
+  product.forEach(async(el) => {
     return arr.push({
       id: arr.length + 1,
       productName: el.name,
       quantity: el.quantity,
       properties: el.properties,
+      imgUrl:`${imgUrl}${el.product_id}/images.json`,
       status: "pending",
-    });
+    });                                       
   });
-
   return arr;
 };
 
+
 const getorders = async (order) => {
-  // var orderAlreadyExist=await Order.findOneAndDelete({order_number:order.order_number});
   var orderAlreadyExist = await Order.findOne({
     order_number: order.order_number,
   });
@@ -29,6 +33,7 @@ const getorders = async (order) => {
     let orderToBeSaved = new Order({
       products: await getProductDetails(order.line_items),
       order_number: order.order_number,
+      order_id:order.id,
       notes: order.note === null ? "no notes added" : order.note,
       deliveryType:
         order.shipping_lines.length > 0
@@ -44,8 +49,8 @@ orderRoute.post("/updateOrders", async (req, res) => {
     var orders;
     responce = await axios(process.env.URL);
     orders = await responce.data.orders;
-    await orders.forEach((order) => {
-      return getorders(order);
+    await orders.forEach(async(order) => {
+      return  getorders(order);
     });
     res.status(200).send("orders updated..");
   } catch (error) {
@@ -114,5 +119,49 @@ orderRoute.delete("/deleteDispatched", async (req, res) => {
     console.log(error);
   }
 });
+
+
+orderRoute.delete("/deleteMyOrders",async(req,res)=>{
+  try {
+    let result =await Order.deleteMany({})
+    res.status(200).json(result)
+  } catch (error) {
+    console.log(res)
+  }
+})
+
+orderRoute.post('/getImage',async(req,res)=>{
+  try {
+    let url=req.body.url;
+    let IMAGE=prefix;
+   let responce=await axios(`${IMAGE}${url.slice(8,200)}`)
+    res.status(200).json(responce.data.images[0].src)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+})
+
+orderRoute.post('/fullfill',async(req,res)=>{
+  try {
+    let order_id=req.body.order_id
+    let url=`${openClose}/admin/api/2021-10/orders/${order_id}/close.json`
+    let responce=await axios.post(url).then(res=>res).catch(err=>err)
+    res.status(200).json(responce)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+})
+
+orderRoute.post('/unfullfill',async(req,res)=>{
+  try {
+    let order_id=req.body.order_id
+    let url=`${openClose}/admin/api/2021-10/orders/${order_id}/open.json`
+    let responce=await axios.post(url).then(res=>res).catch(err=>err)
+    res.status(200).json(responce)
+  } catch (error) {
+    res.status(400).json(error)
+  }
+})
+
 
 module.exports = orderRoute;
