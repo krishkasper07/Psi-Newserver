@@ -11,9 +11,12 @@ const orderSchema=mongoose.Schema({
     notes:{
         type:String
     },
+    orderDate:{
+        type:String
+    },
     deliveryType:{
         type:String
-    }
+    },
 })
 
 module.exports=mongoose.model('order',orderSchema);

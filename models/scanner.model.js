@@ -2,19 +2,24 @@ const mongoose=require('mongoose');
 
 const scannerSchema=mongoose.Schema({
     order_number:{
-        type:Number
+        type:Number,
+        required:true
     },
     totalProducts:{
-        type : Array , "default" : [] 
+        type : Array , "default" : [] ,
+        required:true
     },
     scannedProducts:{
-        type : Array , "default" : [] 
+        type : Array , "default" : [] ,
+        required:true
     },
     remainingProducts:{
-        type : Array , "default" : [] 
+        type : Array , "default" : [] ,
+        required:true
     },
    status:{
-       type:String
+       type:String, "default" : "pending",
+       required:true
    }
 })
 

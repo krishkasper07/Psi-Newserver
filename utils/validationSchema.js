@@ -3,8 +3,8 @@ const signUpValidater = (body) => {
   const schema = joi.object({
     userName: joi.string().required().min(3).label("User Name"),
     password: joi.string().required().min(4).label("Password"),
-    firstName:joi.string().required().min(3).label("First Name"),
-    lastName:joi.string().required().min(1).label("Last Name"),
+    name:joi.string().required().min(3).label("Name"),
+    department:joi.string().required().label("Department")
   });
   return schema.validate(body);
 };

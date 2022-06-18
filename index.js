@@ -7,7 +7,7 @@ require('dotenv').config();
 
 const {API_PORT}=process.env;
 
-const port=process.env.API_PORT;
+const port=API_PORT;
 
 
 //requiring express.json() for body parsing
@@ -27,6 +27,8 @@ const scannerRouter = require("./routers/scannerRoute");
 
 const router = require("./routers/users");
 
+const Abandoned = require("./routers/abandoned");
+
 app.use('/api',userRouter);
 
 app.use('/api/refreshToken',refreshRouter);
@@ -37,9 +39,12 @@ app.use('/api',orderRoute);
 
 app.use('/api',scannerRouter);
 
+app.use('/api/abandoned',Abandoned);
+
 app.get('/',(req,res)=>{
     res.json('hello')
 })
+
 
 
 app.listen(port,()=>{

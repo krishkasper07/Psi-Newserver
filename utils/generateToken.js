@@ -4,7 +4,7 @@ const UserToken=require('../models/userToken.model');
 
 const generateTokens=async(user)=>{
 try {
-    const payload={_id:user._id,roles:user.roles,userName:user.userName};
+    const payload={_id:user._id,userName:user.userName,department:user.department};
 
     const accessToken=jwt.sign(
         payload,process.env.ACCESS_TOKEN_PRIVATE_KEY,
