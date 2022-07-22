@@ -76,11 +76,11 @@ orderRoute.get("/dashOrders", async (req, res) => {
 });
 
 orderRoute.put("/changeStatus", async (req, res) => {
- let {id,designerName,status,order_number,designedDate}=req.body;
+  let { id, designerName, status, order_number, designedDate } = req.body;
   try {
     var order = await Order.findOneAndUpdate(
-      { order_number:order_number, "products.id":id },
-      { $set: { "products.$.status":status ,"products.$.designerName":designerName,"products.$.designedDate":designedDate} },
+      { order_number: order_number, "products.id": id },
+      { $set: { "products.$.status": status, "products.$.designerName": designerName, "products.$.designedDate": designedDate } },
       { new: true }
     );
     res.json(order);

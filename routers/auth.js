@@ -1,12 +1,12 @@
-const userRouter=require('express').Router();
+const userRouter = require('express').Router();
 
-const User=require('../models/user.model');
+const User = require('../models/user.model');
 
-const bcrypt=require('bcrypt');
+const bcrypt = require('bcrypt');
 
-const { loginValidater, signUpValidater }=require('../utils/validationSchema')
+const { loginValidater, signUpValidater } = require('../utils/validationSchema')
 
-const generateTokens=require('../utils/generateToken');
+const generateTokens = require('../utils/generateToken');
 
 //signUp Route
 userRouter.post("/signUp", async (req, res) => {
@@ -50,30 +50,30 @@ userRouter.post("/login", async (req, res) => {
         .status(400)
         .json({ error: true, message: error.details[0].message });
 
-        const user = await User.findOne({ userName: req.body.userName });
-if(!user)
-return res
+    const user = await User.findOne({ userName: req.body.userName });
+    if (!user)
+      return res
         .status(401)
         .json({ error: true, message: "Invaild UserName Or Password" });
 
-        const validatePassword=await bcrypt.compare(req.body.password,user.password)
+    const validatePassword = await bcrypt.compare(req.body.password, user.password)
 
-        if(!validatePassword)
-        return res
+    if (!validatePassword)
+      return res
         .status(401)
-        .json({ error: true, message:  "Invaild UserName Or Password" });
+        .json({ error: true, message: "Invaild UserName Or Password" });
 
-        //If EveryThing satisfied GenerateTokens
+    //If EveryThing satisfied GenerateTokens
 
-        const {accessToken,refreshToken}=await generateTokens(user)
+    const { accessToken, refreshToken } = await generateTokens(user)
 
-        res.status(200)
-        .json({
-          error:false,
-          accessToken,
-          refreshToken,
-          message:"Login Sucessfull"
-        })
+    res.status(200)
+      .json({
+        error: false,
+        accessToken,
+        refreshToken,
+        message: "Login Sucessfull"
+      })
 
   } catch (error) {
     console.log(error);
@@ -81,4 +81,4 @@ return res
   }
 });
 
-module.exports=userRouter;
+module.exports = userRouter;

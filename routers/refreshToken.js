@@ -30,7 +30,7 @@ refreshRouter.post("/", async (req, res) => {
       res.status(200).json({
         error: false,
         accessToken,
-        refreshToken:req.body.refreshToken,
+        refreshToken: req.body.refreshToken,
         message: "Acess Token Created Sucessfully",
       });
     })
@@ -41,17 +41,17 @@ refreshRouter.post("/", async (req, res) => {
 
 refreshRouter.post("/delete", async (req, res) => {
   try {
-    const { error } =  refreshTokenValidator(req.body);
+    const { error } = refreshTokenValidator(req.body);
     if (error)
       return res
         .status(400)
         .json({ error: true, message: "Invalid Refresh Token" });
 
-        const userToken= UserToken.findOne({token:req.body.refreshToken});
-        if(!userToken)
-        return res.status(200).json({error:false,message:"Logged Out Successfully"})
-        await userToken.deleteOne()
-        res.status(200).json({ error: false, message: "Logged Out Sucessfully" });
+    const userToken = UserToken.findOne({ token: req.body.refreshToken });
+    if (!userToken)
+      return res.status(200).json({ error: false, message: "Logged Out Successfully" })
+    await userToken.deleteOne()
+    res.status(200).json({ error: false, message: "Logged Out Sucessfully" });
   } catch (error) {
     console.log(error);
     res.status(500).json({ error: true, message: "Internal Server Error" });
@@ -59,4 +59,4 @@ refreshRouter.post("/delete", async (req, res) => {
 });
 
 
-module.exports=refreshRouter;
+module.exports = refreshRouter;

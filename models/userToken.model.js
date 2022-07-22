@@ -1,4 +1,4 @@
-const mongoose=require('mongoose')
+const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema;
 
@@ -20,4 +20,4 @@ const userTokenSchema = new Schema({
 
 const UserToken = mongoose.model("UserToken", userTokenSchema);
 
-module.exports=UserToken;
+module.exports = UserToken;

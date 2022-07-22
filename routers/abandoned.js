@@ -6,7 +6,7 @@ const abandonedUrl = process.env.ABANDONEDURL;
 
 const Customer = require("../models/abandonedCustomer");
 
-const {customerValidater} = require("../utils/verifyCustomer");
+const { customerValidater } = require("../utils/verifyCustomer");
 
 Abandoned.get("/", async (req, res) => {
   try {
@@ -70,7 +70,7 @@ Abandoned.post("/addCustomer", async (req, res) => {
     lastOrderPricing,
   } = req.body;
   try {
-    const { error } = customerValidater({customerName,phone});
+    const { error } = customerValidater({ customerName, phone });
 
     if (error) {
       return res
@@ -94,7 +94,7 @@ Abandoned.post("/addCustomer", async (req, res) => {
       });
       customerToBeSaved.save();
       res.status(200).json("Customer Saved Sucessfully..!");
-    }else {
+    } else {
       res.status(200).send("Customer Already Saved..!");
     }
   } catch (error) {
@@ -115,34 +115,34 @@ Abandoned.put("/updateCustomer/:id", async (req, res) => {
     zip: req.body.zip,
     phone: req.body.phone,
     lastOrderPricing: req.body.lastOrderPricing,
-    notes:req.body.notes
+    notes: req.body.notes
   };
   try {
-    updatedCustomer = await Customer.findByIdAndUpdate({_id:id}, update,{
+    updatedCustomer = await Customer.findByIdAndUpdate({ _id: id }, update, {
       rawResult: true,
     });
-    if(updatedCustomer.ok){
-        res.status(200).json('customer Updated Sucessfully');
+    if (updatedCustomer.ok) {
+      res.status(200).json('customer Updated Sucessfully');
     }
-  }catch (error) {
+  } catch (error) {
     res.status(400).json(error);
   }
 });
 
 
-Abandoned.delete('/delete/:id',async(req,res)=>{
-    let id = req.params.id;
-    try {
-      let deletedCustomer=await Customer.findByIdAndDelete({_id:id})
-       if(deletedCustomer){
-        res.status(200).json('Customer Details Deleted Successfully');
-       }else{
-        res.status(200).json('customer Details doesnt match');
-       }
-     
-    } catch (error) {
-        res.status(400).json(error);
+Abandoned.delete('/delete/:id', async (req, res) => {
+  let id = req.params.id;
+  try {
+    let deletedCustomer = await Customer.findByIdAndDelete({ _id: id })
+    if (deletedCustomer) {
+      res.status(200).json('Customer Details Deleted Successfully');
+    } else {
+      res.status(200).json('customer Details doesnt match');
     }
+
+  } catch (error) {
+    res.status(400).json(error);
+  }
 })
 
 Abandoned.get("/savedCustomers", async (req, res) => {

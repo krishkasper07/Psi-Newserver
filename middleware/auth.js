@@ -2,7 +2,7 @@ const jwt = require("jsonwebtoken");
 
 const auth = async (req, res, next) => {
 
-const token = req.header("x-access-token");
+  const token = req.header("x-access-token");
 
   if (!token)
     return res(403).json({
@@ -14,13 +14,13 @@ const token = req.header("x-access-token");
       token,
       process.env.ACCESS_TOKEN_PRIVATE_KEY
     );
-    req.user=tokenDetails;
+    req.user = tokenDetails;
     next();
   } catch (error) {
     console.log(error);
-    res.status(403).json({error:true,message:"Access Denied:Invaild Token"})
+    res.status(403).json({ error: true, message: "Access Denied:Invaild Token" })
   }
 };
 
 
-module.exports=auth;
+module.exports = auth;

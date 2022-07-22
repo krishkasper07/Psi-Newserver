@@ -28,12 +28,12 @@ const abandonedSchema = mongoose.Schema({
   phone: {
     type: String,
   },
-  lastOrderPricing:{
-      type:String
+  lastOrderPricing: {
+    type: String
   },
-  notes:{
-    type:String,
-    default:""
+  notes: {
+    type: String,
+    default: ""
   }
 });
 
