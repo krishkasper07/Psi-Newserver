@@ -211,4 +211,42 @@ orderRoute.get("/anyOrders", async (req, res) => {
   }
 });
 
+orderRoute.get("/returnDispatched",async (req,res)=>{
+  try {
+    let ordersInDb = await Order.find();
+    let ordersInShopify;
+    let responce = await axios(process.env.URL);
+    ordersInShopify = responce.data.orders;
+    let result=await getAllDispatched(ordersInDb, ordersInShopify);
+    res.status(200).json(result);
+  } catch (error) {
+    res.status(400).json(error);
+  }
+})
+
+const getAllDispatched=async(ordersInDb,ordersInShopify)=>{
+  try {
+    let array1 = [];
+    await ordersInDb.forEach((el) => {
+      return array1.push(el.order_number);
+    });
+
+    let array2 = [];
+
+    await ordersInShopify.forEach((el) => {
+      return array2.push(el.order_number);
+    });
+
+    let fullfilled = await array1.filter((el) => !array2.includes(el));
+
+    console.log(fullfilled.length)
+
+    let filter = { order_number: { $in: fullfilled } };
+
+    return await Order.find(filter);
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 module.exports = orderRoute;
